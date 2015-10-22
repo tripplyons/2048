@@ -11,8 +11,6 @@ function GameManager(size, InputManager, Actuator, StorageManager) {
   this.inputManager.on("keepPlaying", this.keepPlaying.bind(this));
 
   this.setup();
-
-  setInterval(function(){this.move(AI(this.grid.cells))}, 100);
 }
 
 // Restart the game
@@ -54,7 +52,12 @@ GameManager.prototype.setup = function () {
 
     // Add the initial tiles
     this.addStartTiles();
-  }
+   }
+   var self = this;
+   function AILoop() {
+     self.move(AI(self.grid));
+   }
+  setInterval(AILoop, 100);
 
   // Update the actuator
   this.actuate();
