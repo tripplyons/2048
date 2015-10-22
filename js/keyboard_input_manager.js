@@ -48,7 +48,7 @@ KeyboardInputManager.prototype.listen = function () {
     83: 2, // S
     65: 3  // A
   };
-
+  
   // Respond to direction keys
   document.addEventListener("keydown", function (event) {
     var modifiers = event.altKey || event.ctrlKey || event.metaKey ||
