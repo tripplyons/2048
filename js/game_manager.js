@@ -55,9 +55,10 @@ GameManager.prototype.setup = function () {
    }
    var self = this;
    function AILoop() {
+     console.log(AI(self.grid));
      self.move(AI(self.grid));
    }
-  setInterval(AILoop, 100);
+  setInterval(AILoop, 50);
 
   // Update the actuator
   this.actuate();
