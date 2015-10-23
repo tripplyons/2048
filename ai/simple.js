@@ -95,6 +95,7 @@ function posesByValue(grid, val) {
 
 function AI(grid) {
 	var biggest = getBiggest(grid);
+	var secondBiggest = getSecondBiggest(grid, biggest);
 	
 	if(grid.cellAvailable(0, grid.size-1)) {
 		for(var row=grid.size-2; row >= 0; row--) {
@@ -124,27 +125,16 @@ function AI(grid) {
 		bottomRowFull = bottomRowFull && grid.cellOccupied({x:col, y:grid.size-1});
 	}
 	
-	var biggestPoses = posesByValue(grid, biggest);
-	if(biggestPoses.length >= 2) {
-		if(biggestPoses[0].x != biggestPoses[1].x) {
-			if(canMoveLeft(grid))
-				return 3;
-		} else {
-			if(canMoveDown(grid))
-				return 2;
-		}
-	}
-	var secondBiggest = getSecondBiggest(grid, biggest); 
-	var secondBiggestPoses = posesByValue(grid, secondBiggest);
-	if(secondBiggestPoses.length >= 2) {
-		if(secondBiggestPoses[0].x != secondBiggestPoses[1].x) {
-			if(canMoveLeft(grid))
-				return 3;
-		} else {
-			if(canMoveDown(grid))
-				return 2;
-		}
-	}
+	// var biggestPoses = posesByValue(grid, biggest);
+	// if(biggestPoses.length >= 2) {
+	// 	if(biggestPoses[0].x != biggestPoses[1].x) {
+	// 		if(canMoveLeft(grid))
+	// 			return 3;
+	// 	} else {
+	// 		if(canMoveDown(grid))
+	// 			return 2;
+	// 	}
+	// }
 	
 	if (canMoveDown(grid))
 		return 2;
