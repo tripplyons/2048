@@ -1,107 +1,12 @@
-function canMoveDown(grid) {
-	var retrn = false;
-	grid.eachCell(function(x, y, content) {
-		if (y != grid.size-1) {
-			try {
-				if(grid.cellOccupied({x:x, y:y})) {
-					if(!grid.cellOccupied({x:x, y:y+1})) {
-						retrn = true;
-					}
-					if(content.value == grid.cellContent({x:x, y:y+1}).value) {
-						retrn = true;
-					}
-				}
-			} catch(err) {  }
-		}
-	});
-	
-	return retrn;
-}
-
-function canMoveLeft(grid) {
-	var retrn = false;
-	grid.eachCell(function(x, y, content) {
-		if (x != 0) {
-			try {
-				if(grid.cellOccupied({x:x, y:y})) {
-					if(!grid.cellOccupied({x:x-1, y:y})) {
-						retrn = true
-					}
-					if(content.value == grid.cellContent({x:x-1, y:y}).value) {
-						retrn = true;
-					}
-				}
-			} catch(err) {  }
-		}
-	});
-	
-	return retrn;
-}
-
-function canMoveRight(grid) {
-	var retrn = false;
-	grid.eachCell(function(x, y, content) {
-		if (x != grid.size-1) {
-			try {
-				if(grid.cellOccupied({x:x, y:y})) {
-					if(!grid.cellOccupied({x:x+1, y:y})) {
-						retrn = true;
-					}
-					if(content.value == grid.cellContent({x:x+1, y:y}).value) {
-						retrn = true;
-					}
-				}
-			} catch(err) {  }
-		}
-	});
-	
-	return retrn;
-}
-
-function getBiggest(grid) {
-	var biggest = 0;
-	grid.eachCell(function(x, y, content) {
-		try {
-			if(content.value > biggest)
-				biggest = content.value;
-		} catch(err) {  }
-	});
-	
-	return biggest;
-}
-
-function getSecondBiggest(grid, biggest) {
-	var secondBiggest = 0;
-	grid.eachCell(function(x, y, content) {
-		try {
-			if(content.value > secondBiggest && content.value != biggest)
-				secondBiggest = content.value;
-		} catch(err) {  }
-	});
-	
-	return secondBiggest;
-}
-
-function posesByValue(grid, val) {
-	var poses=[];
-	grid.eachCell(function(x, y, content) {
-		try {
-			if(content.value == val)
-				poses.push({x:x, y:y});
-		} catch(err) {  }
-	});
-	return poses;
-}
-
 function AI(grid) {
 	var biggest = getBiggest(grid);
 	var secondBiggest = getSecondBiggest(grid, biggest);
 	
-	if(grid.cellAvailable(0, grid.size-1)) {
+	if(grid.cellAvailable({x:0, y:grid.size-1})) {
 		for(var row=grid.size-2; row >= 0; row--) {
 			// try {
-			if(grid.cellOccupied(0, row)) {
-				if(grid.cellContent(0, row).value == biggest)
+			if(grid.cellOccupied({x:0, y:row})) {
+				if(grid.cellContent({x:0, y:row}).value == biggest || grid.cellContent({x:0, y:row}).value == secondBiggest)
 					return 2;
 				else
 					break;
@@ -109,15 +14,18 @@ function AI(grid) {
 			// } catch(err) {  }
 		}
 		for(var col=1; col < grid.size; col++) {
-			if(grid.cellOccupied(0, row)) {
+			if(grid.cellOccupied({x:col, y:grid.size-1})) {
 				// try {
-				if(grid.cellContent(0, row).value == biggest)
+				if(grid.cellContent({x:col, y:grid.size-1}).value == biggest || grid.cellContent({x:col, y:grid.size-1}).value == secondBiggest)
 					return 3;
 				else
 					break;
 				// } catch(err) {  }
 			}
 		}
+		// if(canMoveLeft(grid)) {
+		// 	return 3;
+		// }
 	}
 	
 	var bottomRowFull = true;
@@ -125,16 +33,23 @@ function AI(grid) {
 		bottomRowFull = bottomRowFull && grid.cellOccupied({x:col, y:grid.size-1});
 	}
 	
-	// var biggestPoses = posesByValue(grid, biggest);
-	// if(biggestPoses.length >= 2) {
-	// 	if(biggestPoses[0].x != biggestPoses[1].x) {
-	// 		if(canMoveLeft(grid))
-	// 			return 3;
-	// 	} else {
-	// 		if(canMoveDown(grid))
-	// 			return 2;
-	// 	}
-	// }
+	var biggestPoses = posesByValue(grid, biggest);
+	var secondBiggestPoses = posesByValue(grid, secondBiggest);
+	if(biggestPoses.length >= 2) {
+		if(secondBiggestPoses.length > 2) {
+			
+		} else {
+			if(biggestPoses[0].x != biggestPoses[1].x) {
+				if(canMoveLeft(grid))
+					return 3;
+				if(canMoveRight(grid))
+					return 1;
+			} else {
+				if(canMoveDown(grid))
+					return 2;
+			}
+		}
+	}
 	
 	if (canMoveDown(grid))
 		return 2;
