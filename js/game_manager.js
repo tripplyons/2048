@@ -58,8 +58,6 @@ GameManager.prototype.setup = function () {
     if (!self.over) {
       console.log("GOING");
       self.move(AI(self.grid));
-    } else {
-      setTimeout(self.restart, 5000);
     }
   }
   setInterval(AILoop, 250);
