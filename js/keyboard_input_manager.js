@@ -53,7 +53,8 @@ KeyboardInputManager.prototype.listen = function () {
   document.addEventListener("keydown", function (event) {
     var modifiers = event.altKey || event.ctrlKey || event.metaKey ||
                     event.shiftKey;
-    var mapped    = map[event.which];
+    // var mapped    = map[event.which];
+    var mapped = null;
 
     if (!modifiers) {
       if (mapped !== undefined) {
