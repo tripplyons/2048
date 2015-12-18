@@ -15,6 +15,7 @@ function GameManager(size, InputManager, Actuator, StorageManager) {
 
 // Restart the game
 GameManager.prototype.restart = function () {
+  gameOver(parseInt(document.getElementsByClassName("score-container")[0].innerHTML));
   this.storageManager.clearGameState();
   this.actuator.continueGame(); // Clear the game won/lost message
   this.setup();
@@ -56,8 +57,9 @@ GameManager.prototype.setup = function () {
   var self = this;
   function AILoop() {
     if (!self.over) {
-      console.log("GOING");
       self.move(AI(self.grid));
+    } else {
+      self.restart();
     }
   }
   setInterval(AILoop, 250);
