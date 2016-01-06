@@ -5,6 +5,10 @@ function GameManager(size, InputManager, Actuator, StorageManager) {
   this.actuator = new Actuator;
 
   this.startTiles = 2;
+  
+  this.gamesLeft = 64;
+  
+  this.scores = [];
 
   this.inputManager.on("move", this.move.bind(this));
   this.inputManager.on("restart", this.restart.bind(this));
@@ -59,7 +63,12 @@ GameManager.prototype.setup = function () {
     if (!self.over) {
       self.move(AI(self.grid));
     } else {
-      self.restart();
+      if(self.gamesLeft > 0) {
+        self.gamesLeft -= 1;
+        self.scores.push(self.score);
+        graph(self.scores);
+        self.restart();
+      }
     }
   }
   setInterval(AILoop, 250);
