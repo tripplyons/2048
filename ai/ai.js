@@ -1,24 +1,46 @@
-var net = new brain.NeuralNetwork();
+var net;
 var high = 0;
 var initCountdown = 16;
 var countdown = initCountdown;
 
 var promptVal = prompt("mem?");
 
-var mem = (promptVal)?
-    eval(promptVal) :
-    [{input:
-        [0, 0, 0, 0,
-        0, 0, 0, 0,
-        0, 0, 0, 0,
-        0, 0, 0, 0],
+var tempmem = (promptVal)?
+    null :
+    [{
+        input:
+            [0, 0, 0, 0,
+            0, 0, 0, 0,
+            0, 0, 0, 0,
+            0, 0, 0, 0],
         output: [
             // UP, RIGHT, DOWN, LEFT
             0, 0, 0, 0
         ]
-	}];
-var tempmem = [];
-net.train(mem);
+    }
+];
+
+var mem;
+try {
+    mem = JSON.parse(promptVal);
+} catch(e) {
+    mem = [];
+}
+
+retrain();
+
+function retrain() {
+    if(tempmem != null) {
+        mem.push(tempmem);
+        if(mem.length == 3) {
+            mem.splice(0, 1);
+        }
+    }
+    net = new brain.NeuralNetwork();
+    for(var i=0; i<mem.length; i++) {
+        net.train(mem[i]);
+    }
+}
 
 function AI(grid) {
     if(countdown == 0) {
@@ -66,9 +88,7 @@ function gameOver(score) {
 		if(score > high) {
 			high = score;
 		}
-		mem = tempmem;
-		net = new brain.NeuralNetwork();
-		net.train(mem);
+		retrain();
 	}
 	tempmem = [];
 }
