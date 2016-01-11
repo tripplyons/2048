@@ -3,7 +3,7 @@ var high = 0;
 var initCountdown = 16;
 var countdown = initCountdown;
 
-var promptVal = prompt("mem?");
+var promptVal = null;//prompt("mem?");
 
 var tempmem = (promptVal)?
     null :
@@ -212,16 +212,3 @@ function getBiggest(grid) {
 
 	return biggest;
 }
-
-// function getNextBiggest(grid, lastBiggest) {
-// 	var biggest = null;
-// 	grid.eachCell(function (x, y, content) {
-// 		try {
-// 			if (content.value > biggest && content.value < lastBiggest) {
-// 				biggest = content.value;
-// 			}
-// 		} catch (err) { }
-// 	});
-
-// 	return biggest;
-// }
